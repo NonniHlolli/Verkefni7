@@ -13,7 +13,11 @@ const GAMES_TO_PLAY = 10;
  * Eftir leik er notanda boðið að spila annan leik, ef ekki hættir forrit.
  */
 function start() {
-  villa;
+  var spila = confirm('Markmiðið er að svara eins mörgum af 10 dæmum rétt eins hratt og mögulegt er.');
+  while (spila){
+    play()
+    spila = confirm('Spila annan leik?');
+  }
 }
 
 /**
@@ -28,6 +32,22 @@ function start() {
  *
  */
 function play() {
+  let start = new Date();
+  let fjoldi = 0;
+  for(let i = 0; i < GAMES_TO_PLAY; i = i + 1){
+    var spurja = ask()
+    if (spurja == null){
+      confirm('Hætt í leik.')
+      return;
+    }
+    else if (spurja) {
+      fjoldi = fjoldi+1;
+    }
+  }
+  let end = new Date();
+  let timi = Math.round((end-start)/10)/100;
+  confirm('Þú svaraðir ' + fjoldi + ' af ' + GAMES_TO_PLAY + ' dæmum rétt á ' + timi + ' sekúndum\nMeðalrétt svör á sekúndu eru ' + Math.round(fjoldi*100/timi)/100);
+
 }
 
 /**
@@ -45,7 +65,51 @@ function play() {
  * Sniðugt væri að færa það að búa til spurningu í nýtt fall sem ask() kallar í.
  */
 function ask() {
+  let spurning = question().split(",");
+  let svar = prompt('Hvað er '+spurning[0]+'?')
+  if (svar == null){
+    return null;
+  }
+  else if (parseInt(svar, 10)==parseInt(spurning[1], 10)){
+    return 'blúbb';
+  }
+  else {
+    return false;
+  }
 }
+
+function question() {
+  let virki = randomNumber(1,4).toString();
+  var s,a,b,c;
+  switch(virki){
+    case '1':
+      a = randomNumber(1,100);
+      b = randomNumber(1,100);
+      c = a+b;
+      s = a.toString() + '+' + b.toString() + ',' + c.toString();
+      break;
+    case '2':
+      a = randomNumber(1,100);
+      b = randomNumber(1,100);
+      c = a-b;
+      s = a.toString() + '-' + b.toString() + ',' + c.toString();
+      break;
+    case '3':
+      a = randomNumber(1,10);
+      b = randomNumber(1,10);
+      c = a*b;
+      s = a.toString() + '*' + b.toString() + ',' + c.toString();
+      break;
+    case '4':
+      b = randomNumber(2,10);
+      a = randomNumber(2,10)*b;
+      c = a/b;
+      s = a.toString() + '/' + b.toString() + ',' + c.toString();
+      break;
+  }
+  return s;
+}
+
 
 /**
  * Skilar tölu af handahófi á bilinu [min, max]
